@@ -3,7 +3,7 @@ This github repository will be used to store the arduino code that will be used 
 
 # Instructions
 This section will guide you in getting the code in your arduino IDE.
-1. Download Github Desktop
+1. Download Github Desktop. Link to download: [Github Desktop Download](https://desktop.github.com/download/)
 2. Sign into your github account on Github Desktop
 3. Clone this repository to your local files
 4. Download the arduino IDE. Link to download: [Arduino Download](https://www.arduino.cc/en/software)
