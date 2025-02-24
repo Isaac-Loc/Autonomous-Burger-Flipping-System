@@ -14,16 +14,16 @@ This section will guide you in getting the code in your arduino IDE.
 # Features
 The code provided in this github will provide functionality for all features in this project. Some features include:
 
-##DC Motors 
+### DC Motors 
 The DC Motors will be able to move the spatula and meat probe horizontally across the grill
 
-##Servo Motor
+### Servo Motor
 The Servo Motor should be able to spin the spatula and successfully flip the patty on its other side
 
-##Laser sensors and sensor receivers 
+### Laser sensors and sensor receivers 
 These laser sensors and receivers should successfully locate the patty on the grill
 
-##Meat probe 
+### Meat probe 
 The meat probe should be able to successfully move to the patty and check the patty's temperature correctly
 
 
