@@ -4,6 +4,7 @@ Servo SpatulaServo; //Spatula Servo object
 Servo ProbeServo; //Probe Servo object
 
 int laserReceivers[] {3,4,5}; //Pins 3, 4, and 5 are used for receivers
+int laserPin 7;
 
 //DC Motor 1 Pins (Pins 8, 9, 10)
 #define ENA1 8  // PWM pin to control motor speed (0-255)
@@ -25,9 +26,12 @@ void setup() {
   // put your setup code here, to run once:
   SpatulaServo.attach(6); //attach spatula servo to pin 6
 
-  for(int i=0; i< 3; i++){
+  /*for(int i=0; i< 3; i++){
     pinMode(laserReceivers[i], INPUT); //sets each receiver pin as an input
-  }
+  }*/
+
+  pinMode(laserPin,OUTPUT);
+  digitalWrite(laserPin,HIGH);
 
    // Initialize motor pins
   pinMode(ENA1, OUTPUT);  // Motor 1 speed control
