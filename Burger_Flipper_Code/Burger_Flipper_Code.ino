@@ -1,14 +1,14 @@
 #include <Servo.h>
-#include <OneWire.h>
-#include <DallasTemperature.h>
+//#include <OneWire.h>
+//#include <DallasTemperature.h>
 
-OneWire oneWire(ONE_WIRE_BUS); //sets up onewire communcation
-DallasTemperature sensor(&oneWire); //sets up the DallasTemperature library to work with the OneWire bus
+//OneWire oneWire(ONE_WIRE_BUS); //sets up onewire communcation
+//DallasTemperature sensor(&oneWire); //sets up the DallasTemperature library to work with the OneWire bus
 
 Servo SpatulaServo; //Spatula Servo object
 Servo ProbeServo; //Probe Servo object
 
-#define ONE_WIRE_BUS 2 //uses pin 2 for onewire communication
+/*#define ONE_WIRE_BUS 2 //uses pin 2 for onewire communication
 int laserReceivers[] {3,4,5}; //Pins 3, 4, and 5 are used for receivers
 
 //DC Motor 1 Pins (Pins 8, 9, 10)
@@ -24,16 +24,15 @@ int laserReceivers[] {3,4,5}; //Pins 3, 4, and 5 are used for receivers
 //DC Motor 3 Pins (Pins 14, 15, 16)
 #define ENA3 14 // PWM pin to control motor speed (0-255)
 #define IN1_3 15 // Motor direction control pin 1 (Forward)
-#define IN2_3 16 // Motor direction control pin 2 (Backward)
+#define IN2_3 16 // Motor direction control pin 2 (Backward)*/
 
 
 void setup() {
   // put your setup code here, to run once:
-  sensor.begin(); //initializes the sensor for arduino communication
-  SpatulaServo.attach(6); //attach spatula servo to pin 9
-  ProbeServo.attach(7); //attach probe servo to pin 10
+  //sensor.begin(); //initializes the sensor for arduino communication
+  SpatulaServo.attach(6); //attach spatula servo to pin 6
 
-  for(int i=0; i< 3; i++){
+  /*for(int i=0; i< 3; i++){
     pinMode(laserReceivers[i], INPUT); //sets each receiver pin as an input
   }
 
@@ -48,14 +47,14 @@ void setup() {
 
   pinMode(ENA3, OUTPUT);  // Motor 3 speed control
   pinMode(IN1_3, OUTPUT); // Motor 3 direction control (Forward)
-  pinMode(IN2_3, OUTPUT); // Motor 3 direction control (Backward)
+  pinMode(IN2_3, OUTPUT); // Motor 3 direction control (Backward)*/
 
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  ServoSpinner(180,0,SpatulaServo);
 }
 
 
@@ -69,7 +68,7 @@ void loop() {
 //TEMPERATURE PROBE FUNCTIONALITY
 
 
-float getTemperature(){
+/*float getTemperature(){
   sensor.requestTemperatures(); //requests a temperature reading from the sensor
   float temperature = sensor.getTempFByIndex(0); //stores the temperature from the sensor
   return temperature; //returns the temperature value in degrees Fahrenheit
@@ -88,7 +87,7 @@ void checkLaserReceivers() {
     }
   }
 }
-
+*/
 
 //SERVO MOTORS FUNCTIONALITY
 
