@@ -30,6 +30,7 @@ void setup() {
     pinMode(laserReceivers[i], INPUT); //sets each receiver pin as an input
   }*/
 
+  pinMode(3,INPUT); 
   pinMode(laserPin,OUTPUT);
   digitalWrite(laserPin,HIGH);
 
@@ -46,12 +47,14 @@ void setup() {
   pinMode(IN1_3, OUTPUT); // Motor 3 direction control (Forward)
   pinMode(IN2_3, OUTPUT); // Motor 3 direction control (Backward)
 
+  Serial.begin(9600);
 
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
-
+  int value = digitalRead(pinReceiver);
+  Serial.println(value);
 }
 
 
