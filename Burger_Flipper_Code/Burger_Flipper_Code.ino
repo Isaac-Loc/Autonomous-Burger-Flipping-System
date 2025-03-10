@@ -1,51 +1,67 @@
 #include <Servo.h>
 
 Servo SpatulaServo; //Spatula Servo object
-Servo ProbeServo; //Probe Servo object
 
-int laserReceivers[] {3,4,5}; //Pins 3, 4, and 5 are used for receivers
-int laserPin 7;
+//DC Motor 1 Pins (Pins 0, 1, 2) Probe DC y axis
+#define ENA1 0  // PWM pin to control motor speed (0-255)
+#define IN1_1 1 // Motor direction control pin 1 (Forward)
+#define IN1_2 2 // Motor direction control pin 2 (Backward)
 
-//DC Motor 1 Pins (Pins 8, 9, 10)
-#define ENA1 8  // PWM pin to control motor speed (0-255)
-#define IN1_1 9 // Motor direction control pin 1 (Forward)
-#define IN2_1 10 // Motor direction control pin 2 (Backward)
+//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC
+#define ENA2 3  // PWM pin to control motor speed (0-255)
+#define IN2_1 4 // Motor direction control pin 1 (Forward)
+#define IN2_2 5 // Motor direction control pin 2 (Backward)
 
-//DC Motor 2 Pins (Pins 11, 12, 13)
-#define ENA2 11 // PWM pin to control motor speed (0-255)
-#define IN1_2 12 // Motor direction control pin 1 (Forward)
-#define IN2_2 13 // Motor direction control pin 2 (Backward)
+//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis
+#define ENA3 6  // PWM pin to control motor speed (0-255)
+#define IN3_1 7 // Motor direction control pin 1 (Forward)
+#define IN3_2 8 // Motor direction control pin 2 (Backward)
 
-//DC Motor 3 Pins (Pins 14, 15, 16)
-#define ENA3 14 // PWM pin to control motor speed (0-255)
-#define IN1_3 15 // Motor direction control pin 1 (Forward)
-#define IN2_3 16 // Motor direction control pin 2 (Backward)
+//ALL LASERS AND RECEIVER PINS
+#define laser1 10 //Pin for laser 1
+#define laser2 11 //Pin for laser 2
+#define laser3 12 //Pin for laser 3
+#define laser4 13 //Pin for laser 4
+
+#define receiver1 14 //Pin for receiver 1
+#define receiver2 15 //Pin for receiver 2
+#define receiver3 16 //Pin for receiver 3
+#define receiver4 17 //Pin for receiver 4
 
 
 void setup() {
   // put your setup code here, to run once:
-  SpatulaServo.attach(6); //attach spatula servo to pin 6
-
-  /*for(int i=0; i< 3; i++){
-    pinMode(laserReceivers[i], INPUT); //sets each receiver pin as an input
-  }*/
-
-  pinMode(3,INPUT); 
-  pinMode(laserPin,OUTPUT);
-  digitalWrite(laserPin,HIGH);
+  SpatulaServo.attach(9); //attach spatula servo to pin 6
 
    // Initialize motor pins
   pinMode(ENA1, OUTPUT);  // Motor 1 speed control
   pinMode(IN1_1, OUTPUT); // Motor 1 direction control (Forward)
-  pinMode(IN2_1, OUTPUT); // Motor 1 direction control (Backward)
+  pinMode(IN1_2, OUTPUT); // Motor 1 direction control (Backward)
   
   pinMode(ENA2, OUTPUT);  // Motor 2 speed control
-  pinMode(IN1_2, OUTPUT); // Motor 2 direction control (Forward)
+  pinMode(IN2_1, OUTPUT); // Motor 2 direction control (Forward)
   pinMode(IN2_2, OUTPUT); // Motor 2 direction control (Backward)
 
   pinMode(ENA3, OUTPUT);  // Motor 3 speed control
-  pinMode(IN1_3, OUTPUT); // Motor 3 direction control (Forward)
-  pinMode(IN2_3, OUTPUT); // Motor 3 direction control (Backward)
+  pinMode(IN3_1, OUTPUT); // Motor 3 direction control (Forward)
+  pinMode(IN3_2, OUTPUT); // Motor 3 direction control (Backward)
+
+  pinMode(laser1, OUTPUT); // set the laser pin to output mode
+  pinMode(receiver1, INPUT); // set the laser pin to output mode
+  digitalWrite(laser1, HIGH); // emit red laser
+
+  pinMode(laser2, OUTPUT); // set the laser pin to output mode
+  pinMode(receiver2, INPUT); // set the laser pin to output mode
+  digitalWrite(laser2, HIGH);// emit red laser
+
+  pinMode(laser3, OUTPUT); // set the laser pin to output mode
+  pinMode(receiver3, INPUT); // set the laser pin to output mode
+  digitalWrite(laser3, HIGH);// emit red laser
+
+  pinMode(laser4, OUTPUT); // set the laser pin to output mode
+  pinMode(receiver4, INPUT); // set the laser pin to output mode
+  digitalWrite(laser4, HIGH); // emit red laser
+
 
   Serial.begin(9600);
 
@@ -53,30 +69,28 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  int value = digitalRead(pinReceiver);
-  Serial.println(value);
+  int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
+
+  if(value1==1 || value2==1  || value3==1 || value4==1 ){
+    moveForward(ENA2, IN2_1, IN2_2, 255, 15); //Move spatula DC Motor to pick up the patty
+    moveBackward(ENA2, IN2_1, IN2_2, 255, 7); //Move spatula DC Motor back to middle of the grill
+    SpatulaServo.write(180); //Flip spatula to place patty in the center
+    delay(3000); //1 second delay
+    SpatulaServo.write(0); //Flip spatula back to default position
+    moveBackward(ENA2, IN2_1, IN2_2, 255, 8); //Move spatula DC Motor back to the start
+    delay(5000); //5 second delay
+    moveForward(ENA3, IN3_1, IN3_2, 255, 8); //Move probe x-DC Motor to the middle of the grill
+    
+
+  }
+
 }
-
-
-
-
 
 
 // GENERAL HELPER FUNCTIONS
-
-
-//LASER RECEIVER CHECKER FUNCTIONALITY
-
-void checkLaserReceivers() {
-  for (int i = 0; i < 3; i++) {
-    int laserStatus = digitalRead(laserReceivers[i]);
-    if (laserStatus == LOW) { // Laser is blocked
-      Serial.print("Laser Receiver ");
-      Serial.print(i + 1);  // Increment index to start at 1
-      Serial.println(" has lost connection!");
-    }
-  }
-}
 
 
 //SERVO MOTORS FUNCTIONALITY
