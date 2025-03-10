@@ -94,13 +94,7 @@ void loop() {
     delay(5000); //5 second delay
     moveForward(ENA3, IN3_1, IN3_2, 255, 8); //Move probe x-DC Motor to the middle of the grill
     moveForward(ENA1,IN1_1,IN1_2,255,5); //Move probe y-DC Motor 1/3 of the way to the grill
-
-    if(GetTemperature<165.0){
-      
-    }
-
-    
-
+  
 
   }
 
