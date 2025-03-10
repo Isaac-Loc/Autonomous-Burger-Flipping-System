@@ -1,3 +1,5 @@
+#include <DallasTemperature.h>
+#include <OneWire.h>
 #include <Servo.h>
 
 Servo SpatulaServo; //Spatula Servo object
@@ -28,6 +30,12 @@ Servo SpatulaServo; //Spatula Servo object
 #define receiver3 16 //Pin for receiver 3
 #define receiver4 17 //Pin for receiver 4
 
+#define ONE_WIRE_BUS 18
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
+float Celsius =0.0;
+float Fahrenheit = 0.0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -64,7 +72,7 @@ void setup() {
 
 
   Serial.begin(9600);
-
+  sensors.begin();
 }
 
 void loop() {
@@ -77,13 +85,16 @@ void loop() {
   if(value1==1 || value2==1  || value3==1 || value4==1 ){
     moveForward(ENA2, IN2_1, IN2_2, 255, 15); //Move spatula DC Motor to pick up the patty
     moveBackward(ENA2, IN2_1, IN2_2, 255, 7); //Move spatula DC Motor back to middle of the grill
+
     SpatulaServo.write(180); //Flip spatula to place patty in the center
     delay(3000); //1 second delay
     SpatulaServo.write(0); //Flip spatula back to default position
+    
     moveBackward(ENA2, IN2_1, IN2_2, 255, 8); //Move spatula DC Motor back to the start
     delay(5000); //5 second delay
     moveForward(ENA3, IN3_1, IN3_2, 255, 8); //Move probe x-DC Motor to the middle of the grill
-    
+    moveForward(ENA1,IN1_1,IN1_2,255,5); //Move probe y-DC Motor 1/3 of the way to the grill
+  
 
   }
 
@@ -92,6 +103,13 @@ void loop() {
 
 // GENERAL HELPER FUNCTIONS
 
+//Temperature probe
+float GetTemperature(){
+  sensors.requestTemperatures();
+    Celsius = sensors.getTempCByIndex(0);
+    Fahrenheit = sensors.toFahrenheit(Celsius);
+    return Fahrenheit;
+}
 
 //SERVO MOTORS FUNCTIONALITY
 
