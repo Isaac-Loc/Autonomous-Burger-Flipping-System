@@ -1,3 +1,11 @@
+#include <DallasTemperature.h>
+#include <OneWire.h>
+
+
+#define ONE_WIRE_BUS 10
+OneWire oneWire(ONE_WIRE_BUS);
+DallasTemperature sensors(&oneWire);
+
 // Define segment pins
 const int segmentPins[8] = {2, 3, 4, 5, 6, 7, 8, 9}; // A to DP
 const int digitPins[3] = {11, 12, 13}; // Common cathode pins
@@ -48,6 +56,15 @@ void showSegments(byte segments) {
     digitalWrite(segmentPins[i], (segments >> i) & 1);
   }
 }
+
+float GetTemperature(){
+    sensors.requestTemperatures();
+    float Celsius = sensors.getTempCByIndex(0);
+    float Fahrenheit = sensors.toFahrenheit(Celsius);
+    return Fahrenheit;
+}
+
+
 
 void loop() {
   displayNumber(165);
