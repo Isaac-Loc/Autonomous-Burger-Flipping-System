@@ -35,6 +35,10 @@ void setup() {
     pinMode(digitPins[i], OUTPUT);
     digitalWrite(digitPins[i], HIGH); // Start with all digits off
   }
+
+  Serial.begin(9600);
+  sensors.begin();
+
 }
 
 void displayNumber(int number) {
@@ -67,7 +71,11 @@ float GetTemperature(){
 
 
 void loop() {
-  displayNumber(165);
+  float tempF = GetTemperature();
+  Serial.print("Fahrenheit: ");
+  Serial.print(tempF);
+  Serial.print("\n");
+  delay(1000);
   /*for (int i = 0; i <= 999; i++) { // Count from 0 to 999
     unsigned long start = millis();
     while (millis() - start < 200) { // Show each number for 200ms
