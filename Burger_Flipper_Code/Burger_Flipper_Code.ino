@@ -20,21 +20,21 @@ Servo SpatulaServo; //Spatula Servo object
 #define IN3_2 8 // Motor direction control pin 2 (Backward)
 
 //ALL LASERS AND RECEIVER PINS
-#define laser1 17 //Pin for laser 1
-#define laser2 20 //Pin for laser 2
-#define laser3 19 //Pin for laser 3
-//#define laser4 13 //Pin for laser 4
+#define laser1 14 //Pin for laser 1
+#define laser2 15 //Pin for laser 2
+#define laser3 16 //Pin for laser 3
+#define laser4 17 //Pin for laser 4
 
-#define receiver1 14 //Pin for receiver 1
-#define receiver2 15 //Pin for receiver 2
-#define receiver3 16 //Pin for receiver 3
-//#define receiver4 17 //Pin for receiver 4
+#define receiver1 18 //Pin for receiver 1
+#define receiver2 19 //Pin for receiver 2
+#define receiver3 20 //Pin for receiver 3
+#define receiver4 21 //Pin for receiver 4
 
 #define ONE_WIRE_BUS 18
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-float Celsius =0.0;
+float Celsius = 0.0;
 float Fahrenheit = 0.0;
 
 
@@ -83,14 +83,14 @@ void loop() {
   int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
   int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
   int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
-  //int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
 
   //Serial.print(value1);
   //Serial.print(value2);
   //Serial.print(value3);
   //Serial.print(value4);
 
-  /*if(value1==1){
+  /*if(value1==1 || value2==1 || value3==1 || value4==1){
     moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor to pick up the patty
     delay(3000);
     moveBackward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor back to middle of the grill
@@ -111,12 +111,12 @@ void loop() {
 // GENERAL HELPER FUNCTIONS
 
 //Temperature probe
-/*float GetTemperature(){
+float GetTemperature(){
   sensors.requestTemperatures();
     Celsius = sensors.getTempCByIndex(0);
     Fahrenheit = sensors.toFahrenheit(Celsius);
     return Fahrenheit;
-}*/
+}
 
 //SERVO MOTORS FUNCTIONALITY
 
