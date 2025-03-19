@@ -4,17 +4,17 @@
 
 Servo SpatulaServo; //Spatula Servo object
 
-//DC Motor 1 Pins (Pins 0, 1, 2) Probe DC y axis
+//DC Motor 1 Pins (Pins 0, 1, 2) Probe DC y axis - 12v DC Motor 
 #define ENA1 10  // PWM pin to control motor speed (0-255)
 #define IN1_1 13 // Motor direction control pin 1 (Forward)
 #define IN1_2 2 // Motor direction control pin 2 (Backward)
 
-//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC
+//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC - 24v DC Motor
 #define ENA2 3  // PWM pin to control motor speed (0-255)
 #define IN2_1 4 // Motor direction control pin 1 (Forward)
 #define IN2_2 5 // Motor direction control pin 2 (Backward)
 
-//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis
+//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis - 24v DC Motor
 #define ENA3 6  // PWM pin to control motor speed (0-255)
 #define IN3_1 7 // Motor direction control pin 1 (Forward)
 #define IN3_2 8 // Motor direction control pin 2 (Backward)
