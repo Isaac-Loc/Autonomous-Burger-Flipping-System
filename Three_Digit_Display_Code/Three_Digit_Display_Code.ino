@@ -69,13 +69,13 @@ float GetTemperature(){
 }
 
 
-
 void loop() {
+  displayNumber(420);
   float tempF = GetTemperature();
   Serial.print("Fahrenheit: ");
   Serial.print(tempF);
   Serial.print("\n");
-  delay(1000);
+  //delay(1000);
   /*for (int i = 0; i <= 999; i++) { // Count from 0 to 999
     unsigned long start = millis();
     while (millis() - start < 200) { // Show each number for 200ms

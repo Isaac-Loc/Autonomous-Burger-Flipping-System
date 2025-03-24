@@ -5,7 +5,7 @@
 
 Servo SpatulaServo; //Spatula Servo object
 
-//DC Motor 1 Pins (Pins 0, 1, 2) Probe DC y axis
+//DC Motor 1 Pins (Pins 10, 13, 2) Probe DC y axis
 #define ENA1 10  // PWM pin to control motor speed (0-255)
 #define IN1_1 13 // Motor direction control pin 1 (Forward)
 #define IN1_2 2 // Motor direction control pin 2 (Backward)
@@ -31,12 +31,30 @@ Servo SpatulaServo; //Spatula Servo object
 #define receiver3 20 //Pin for receiver 3
 #define receiver4 21 //Pin for receiver 4
 
-#define ONE_WIRE_BUS 18
+#define ONE_WIRE_BUS 22 //Pin for temperature probe
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
-float Celsius = 0.0;
-float Fahrenheit = 0.0;
+const int KillSwitch = 23; //Pin for kill switch
+
+// Define segment pins for 3 digit display
+const int segmentPins[8] = {24, 25, 26, 27, 28, 29, 30, 31}; // A to DP
+const int digitPins[3] = {32, 33, 34}; // Common cathode pins
+
+
+// Define digit representation for numbers 0-9
+const byte digits[10] = {
+  0b00111111, // 0
+  0b00000110, // 1
+  0b01011011, // 2
+  0b01001111, // 3
+  0b01100110, // 4
+  0b01101101, // 5
+  0b01111101, // 6
+  0b00000111, // 7
+  0b01111111, // 8
+  0b01101111  // 9
+};
 
 
 void setup() {
@@ -68,23 +86,34 @@ void setup() {
   pinMode(receiver3, INPUT); // set the laser pin to output mode
   digitalWrite(laser3, HIGH);// emit red laser
 
-  /*pinMode(laser4, OUTPUT); // set the laser pin to output mode
+  pinMode(laser4, OUTPUT); // set the laser pin to output mode
   pinMode(receiver4, INPUT); // set the laser pin to output mode
-  digitalWrite(laser4, HIGH); // emit red laser*/
+  digitalWrite(laser4, HIGH); // emit red laser
 
+  // Set segment pins as OUTPUT
+  for (int i = 0; i < 8; i++) {
+    pinMode(segmentPins[i], OUTPUT);
+  }
+  
+  // Set digit control pins as OUTPUT
+  for (int i = 0; i < 3; i++) {
+    pinMode(digitPins[i], OUTPUT);
+    digitalWrite(digitPins[i], HIGH); // Start with all digits off
+  }
+
+  pinMode(KillSwitch,INPUT_PULLUP); // sets up kill switch pin
+  
   Serial.begin(9600);
   sensors.begin();
-  
 }
 
 void loop() {
   // put your main code here, to run repeatedly:
   //1 is not connected 0 is connected to receiver
-  moveForward(ENA1,IN1_1,IN1_2,255,5000);
-  int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
-  int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
-  int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
-  int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
+  //int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
+  //int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
+  //int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
+  //int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
 
   //Serial.print(value1);
   //Serial.print(value2);
@@ -114,9 +143,9 @@ void loop() {
 //Temperature probe
 float GetTemperature(){
   sensors.requestTemperatures();
-    Celsius = sensors.getTempCByIndex(0);
-    Fahrenheit = sensors.toFahrenheit(Celsius);
-    return Fahrenheit;
+  float Celsius = sensors.getTempCByIndex(0);
+  float Fahrenheit = sensors.toFahrenheit(Celsius);
+  return Fahrenheit;
 }
 
 //SERVO MOTORS FUNCTIONALITY
@@ -128,8 +157,6 @@ void ServoSpinner(int angle1, int angle2, Servo &servo){
   servo.write(angle2); //moves the servo angle2 degrees  
   delay(1000); //1 second delay
 }
-
-
 
 //DC MOTOR FUNCTIONALITY
 
@@ -148,7 +175,6 @@ void moveForward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
 /* Move motor 1 forward with speed 200 for 5 seconds
 
   moveForward(ENA1, IN1_1, IN2_1, 200, 5000); */
-
 
 
 // Function to move the motor backward
@@ -178,6 +204,53 @@ void stopMotor(int in1Pin, int in2Pin) {
 /*Stop motor after moving
 
   StopMotor(in1Pin, in2Pin); */    
+
+
+//Function for number shown on the 3 digit display
+
+void displayNumber(int number) {
+  int digitValues[3] = {number / 100, (number / 10) % 10, number % 10};
+
+  for (int i = 0; i < 3; i++) {
+    digitalWrite(digitPins[i], LOW); // Enable digit
+
+    showSegments(digits[digitValues[i]]); // Show corresponding number
+    
+    delay(5); // Small delay for persistence of vision
+    
+    digitalWrite(digitPins[i], HIGH); // Disable digit
+  }
+}
+
+//Helper function for display numbers
+
+void showSegments(byte segments) {
+  for (int i = 0; i < 8; i++) {
+    digitalWrite(segmentPins[i], (segments >> i) & 1);
+  }
+}
+
+//Kill switch function
+
+void CheckKillSwitch(){
+  if(digitalRead(KillSwitch)==LOW){
+    digitalWrite(laser1, LOW); // emit red laser
+    digitalWrite(laser2, LOW); // emit red laser
+    digitalWrite(laser3, LOW); // emit red laser
+    digitalWrite(laser4, LOW); // emit red laser
+    stopMotor(IN1_1,IN1_2);
+    stopMotor(IN2_1,IN2_2);
+    stopMotor(IN3_1,IN3_2);
+    while(true){
+      delay(30303033030303030);
+    }
+  }
+}
+
+
+
+
+
 
 
 
