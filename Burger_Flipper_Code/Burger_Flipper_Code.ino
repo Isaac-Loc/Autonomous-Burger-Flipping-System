@@ -109,32 +109,70 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
+  CheckKillSwitch();
   //1 is not connected 0 is connected to receiver
-  //int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
-  //int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
-  //int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
-  //int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
+  int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
 
-  //Serial.print(value1);
-  //Serial.print(value2);
-  //Serial.print(value3);
-  //Serial.print(value4);
-
-  /*if(value1==1 || value2==1 || value3==1 || value4==1){
+  if(value1==1 || value2==1 || value3==1 || value4==1){
     moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor to pick up the patty
-    delay(3000);
-    moveBackward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor back to middle of the grill
-  */
-    /*SpatulaServo.write(180); //Flip spatula to place patty in the center
-    delay(3000); //1 second delay
+    delay(7000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    SpatulaServo.write(180); //flip the spatula 180
+    moveBackward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor back to start of the grill
+    delay(7000); //7 second delay
+    CheckKillSwitch();//kill switch check
     SpatulaServo.write(0); //Flip spatula back to default position
-    
-    moveBackward(ENA2, IN2_1, IN2_2, 255, 8000); //Move spatula DC Motor back to the start
-    delay(5000); //5 second delay
-    moveForward(ENA3, IN3_1, IN3_2, 255, 8000); //Move probe x-DC Motor to the middle of the grill
-    moveForward(ENA1,IN1_1,IN1_2,255,5000); //Move probe y-DC Motor 1/3 of the way to the grill
-  */
-  //}
+    delay(3000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    moveForward(ENA3, IN3_1, IN3_2, 255, 2500); //moves probe to middle. may change to moveForward depending on probe start location
+    delay(4000); //4 second delay
+    CheckKillSwitch(); //kill switch check
+    moveForward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe the other axis until the end (the probe should be in the burger in theory)
+    delay(8000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    float Temperature = 0.0;
+    while(!(Temperature>=165.0)){
+      Temperature = GetTemperature();
+    }
+    CheckKillSwitch(); //kill switch check
+    moveBackward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe backward to the middle position on the side
+    delay(6000); //6 second delay
+    CheckKillSwitch(); //kill switch check
+    moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor to pick up the patty
+    delay(7000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    SpatulaServo.write(180); //flip the spatula 180
+    moveBackward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor back to start of the grill
+    delay(7000); //7 second delay
+    CheckKillSwitch();//kill switch check
+    SpatulaServo.write(0); //Flip spatula back to default position
+    delay(3000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    moveForward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe the other axis until the end (the probe should be in the burger in theory)
+    delay(8000); //7 second delay
+    CheckKillSwitch(); //kill switch check
+    float Temperature2 = 0.0;
+    while(!(Temperature2>=165.0)){
+      Temperature2 = GetTemperature();
+    }
+    CheckKillSwitch(); //kill switch check
+    moveBackward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe backward to the middle position on the side
+    delay(6000); //6 second delay
+    CheckKillSwitch(); //kill switch check
+    moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //moves the spatula all the way to the end to pick up the patty
+    delay(5000);
+    CheckKillSwitch(); //kill switch check
+    moveBackward(ENA2, IN2_1, IN2_2, 255,3000); //moves spatula back right before default position to prepare for plate flip
+    delay(4000); //4 second delay
+    ServoSpatula.write(180); //flip the spatula 180
+    delay(3000); //3 second delay
+    ServoSpatula.write(0); //flip spatula back to default
+    moveBackward(ENA2, IN2_1, IN2_2, 255, 2000);
+    delay(3000); //3 second delay
+  }
 }
 
 
