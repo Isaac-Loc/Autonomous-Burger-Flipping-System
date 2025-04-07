@@ -7,28 +7,39 @@
 
 //CODE BELOW DEFINES PIN NUMBERS FOR EVERYTHING THAT NEEDS TO BE WIRED
 
+
+//INITIALIZES SERVO MOTOR OBJECT
+
+
 Servo SpatulaServo; //Spatula Servo object
 
 
 //DC MOTOR 1 PINS (Pins 10, 13, 2) Probe DC y axis
 
+
 #define ENA1 10  // PWM pin to control motor speed (0-255)
 #define IN1_1 13 // Motor direction control pin 1 (Forward)
 #define IN1_2 2 // Motor direction control pin 2 (Backward)
 
+
 //DC MOTOR 2 PINS (Pins 3, 4, 5) Spatula DC
+
 
 #define ENA2 3  // PWM pin to control motor speed (0-255)
 #define IN2_1 4 // Motor direction control pin 1 (Forward)
 #define IN2_2 5 // Motor direction control pin 2 (Backward)
 
+
 //DC MOTOR 3 PINS (Pins 6, 7, 8) Probe DC x axis
+
 
 #define ENA3 6  // PWM pin to control motor speed (0-255)
 #define IN3_1 7 // Motor direction control pin 1 (Forward)
 #define IN3_2 8 // Motor direction control pin 2 (Backward)
 
+
 //ALL LASERS AND RECEIVER PIN NUMBERS
+
 
 #define laser1 14 //Pin for laser 1
 #define laser2 15 //Pin for laser 2
@@ -43,18 +54,24 @@ Servo SpatulaServo; //Spatula Servo object
 
 //PIN NUMBER FOR TEMPERATURE PROBE
 
+
 #define ONE_WIRE_BUS 22 //Pin for temperature probe
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
+
 //PIN NUMBER FOR KILL SWITCH
+
 
 const int KillSwitch = 23; //Pin for kill switch
 
+
 //PIN NUMBER FOR 3 DIGIT DISPLAY
+
 
 const int segmentPins[8] = {24, 25, 26, 27, 28, 29, 30, 31}; // A to DP
 const int digitPins[3] = {32, 33, 34}; // Common cathode pins
+
 
 //DIGIT REPRESENTATION FOR NUMBERS 0-9 FOR 3 DIGIT DISPLAY
 
@@ -79,11 +96,16 @@ const byte digits[10] = {
 
 
 void setup() {
+
+
   //INITIALIZE SERVO PIN
 
-  SpatulaServo.attach(9); //attach spatula servo to pin 6
 
-   // INITIALIZE DC MOTOR PINS
+  SpatulaServo.attach(9); //attach spatula servo to pin 9
+
+
+  //INITIALIZES DC MOTOR PINS
+
 
   pinMode(ENA1, OUTPUT);  // Motor 1 speed control
   pinMode(IN1_1, OUTPUT); // Motor 1 direction control (Forward)
@@ -97,7 +119,9 @@ void setup() {
   pinMode(IN3_1, OUTPUT); // Motor 3 direction control (Forward)
   pinMode(IN3_2, OUTPUT); // Motor 3 direction control (Backward)
 
+
   //INITIALIZES LASER AND RECEIVER PINS
+
 
   pinMode(laser1, OUTPUT); // set the laser pin to output mode
   pinMode(receiver1, INPUT); // set the receiver pin to input mode
@@ -121,16 +145,20 @@ void setup() {
 
   // SET SEGMENT PINS AS OUTPUT
 
+
   for (int i = 0; i < 8; i++) {
     pinMode(segmentPins[i], OUTPUT);
   }
-  
+
+
   // Set DIGIT CONTROL PINS OUTPUT
+
 
   for (int i = 0; i < 3; i++) {
     pinMode(digitPins[i], OUTPUT);
     digitalWrite(digitPins[i], HIGH); // Start with all digits off
   }
+
 
   //INITIALIZES KILL SWITCH PIN
 
@@ -139,6 +167,7 @@ void setup() {
   
 
   //STARTS THE SERIAL MONITOR AND TEMPERATURE SENSOR
+
 
   Serial.begin(9600);
   sensors.begin();
@@ -150,12 +179,16 @@ void setup() {
 
 
 void loop() {
-  
+
+
   //KILL SWITCH CHECK
+
 
   CheckKillSwitch();
 
+
   //READS RECEIVER VALUES
+
 
   //1 is not connected 0 is connected to receiver
   int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
@@ -164,8 +197,8 @@ void loop() {
   int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
 
 
-
   //STARTS BURGER FLIPPING PROCESS IF RECEIVER VALUES SHOW INTERCEPTED (MEANING BURGER HAS BEEN PLACED)
+
 
   if(value1==1 || value2==1 || value3==1 || value4==1){
 
@@ -232,6 +265,8 @@ void loop() {
 
 
     //PICKS UP BURGER AND FLIPS IT ON A PLATE FOR SERVING
+
+
     CheckKillSwitch(); //kill switch check
     moveBackward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe backward to the middle position on the side
     delay(6000); //6 second delay
@@ -269,7 +304,6 @@ float GetTemperature(){
 
 
 
-
 //SERVO MOTORS FUNCTIONALITY (MAY NOT NEED TO BE USED)
 
 
@@ -281,12 +315,12 @@ void ServoSpinner(int angle1, int angle2, Servo &servo){
 }
 
 
-
-
 //DC MOTOR FUNCTIONALITY
 
 
+
 // MOVES THE DC MOTOR FORWARDS
+
 
 void moveForward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   analogWrite(enaPin, speed);   // Set motor speed (0-255)
@@ -305,6 +339,7 @@ void moveForward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
 
 // MOVES THE DC MOTOR BACKWARDS
 
+
 void moveBackward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   analogWrite(enaPin, speed);   // Set motor speed (0-255)
   digitalWrite(in1Pin, LOW);     // Motor moves backward
@@ -322,6 +357,7 @@ void moveBackward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
 
 // STOPS THE DC MOTOR 
 
+
 void stopMotor(int in1Pin, int in2Pin) {
   digitalWrite(in1Pin, LOW);   // Stop motor (no direction)
   digitalWrite(in2Pin, LOW);   // Stop motor (no direction)
@@ -334,13 +370,11 @@ void stopMotor(int in1Pin, int in2Pin) {
 
 
 
-
-
 //THREE DIGIT DISPLAY FUNCTIOINALITY
 
 
-
 //DISPLAYS 'int' INPUT ON THE THREE DIGIT DISPLAY
+
 
 void displayNumber(int number) {
   int digitValues[3] = {number / 100, (number / 10) % 10, number % 10};
@@ -360,6 +394,7 @@ void displayNumber(int number) {
 
 //HELPER FUNCTION USED FOR 'displayNumber' FUNCTION
 
+
 void showSegments(byte segments) {
   for (int i = 0; i < 8; i++) {
     digitalWrite(segmentPins[i], (segments >> i) & 1);
@@ -368,10 +403,11 @@ void showSegments(byte segments) {
 
 
 
-
 //KILL SWITCH FUNCTIONALITY
 
+
 //FUNCTION USED WHEN KILL SWITCH IS PRESSED (STOPS ALL ELECTRICAL PARTS)
+
 
 void CheckKillSwitch(){
   if(digitalRead(KillSwitch)==LOW){
