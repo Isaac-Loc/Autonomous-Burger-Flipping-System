@@ -1,7 +1,11 @@
-//Libraries needed
+//LIBRARIES NEEDED
+
 #include <DallasTemperature.h>
 #include <OneWire.h>
 #include <Servo.h>
+
+
+//CODE BELOW DEFINES PIN NUMBERS FOR EVERYTHING THAT NEEDS TO BE WIRED
 
 Servo SpatulaServo; //Spatula Servo object
 
@@ -59,6 +63,11 @@ const byte digits[10] = {
 };
 
 
+
+
+//SETUP INITIALIZES ALL PINS SO THE ARDUINO BOARD KNOWS WHAT EACH PIN IS FOR
+
+
 void setup() {
   // put your setup code here, to run once:
   SpatulaServo.attach(9); //attach spatula servo to pin 6
@@ -108,6 +117,11 @@ void setup() {
   Serial.begin(9600);
   sensors.begin();
 }
+
+
+
+//FULLY IMPLEMENTED LOGIC FOR BURGER FLIPPER PROCESS
+
 
 void loop() {
   // put your main code here, to run repeatedly:
@@ -178,9 +192,15 @@ void loop() {
 }
 
 
-// GENERAL HELPER FUNCTIONS
 
-//Temperature probe
+
+// GENERAL HELPER FUNCTIONS TO BE CALLED IN LOOP
+
+
+
+//TEMPERATURE PROBE FUNCTIONALITY
+
+
 float GetTemperature(){
   sensors.requestTemperatures();
   float Celsius = sensors.getTempCByIndex(0);
@@ -188,7 +208,10 @@ float GetTemperature(){
   return Fahrenheit;
 }
 
-//SERVO MOTORS FUNCTIONALITY
+
+
+
+//SERVO MOTORS FUNCTIONALITY (MAY NOT NEED TO BE USED)
 
 
 void ServoSpinner(int angle1, int angle2, Servo &servo){
@@ -198,10 +221,13 @@ void ServoSpinner(int angle1, int angle2, Servo &servo){
   delay(1000); //1 second delay
 }
 
+
+
+
 //DC MOTOR FUNCTIONALITY
 
 
-// Function to move the motor forward
+// MOVES THE DC MOTOR FORWARDS
 
 void moveForward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   analogWrite(enaPin, speed);   // Set motor speed (0-255)
@@ -217,7 +243,8 @@ void moveForward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   moveForward(ENA1, IN1_1, IN2_1, 200, 5000); */
 
 
-// Function to move the motor backward
+
+// MOVES THE DC MOTOR BACKWARDS
 
 void moveBackward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   analogWrite(enaPin, speed);   // Set motor speed (0-255)
@@ -233,7 +260,8 @@ void moveBackward(int enaPin, int in1Pin, int in2Pin, int speed, int duration) {
   moveBackward(ENA1, IN1_1, IN2_1, 200, 5000); */
 
 
-// Function to stop the motor
+
+// STOPS THE DC MOTOR 
 
 void stopMotor(int in1Pin, int in2Pin) {
   digitalWrite(in1Pin, LOW);   // Stop motor (no direction)
@@ -246,8 +274,14 @@ void stopMotor(int in1Pin, int in2Pin) {
   StopMotor(in1Pin, in2Pin); */    
 
 
-//Function for number shown on the 3 digit display
 
+
+
+//THREE DIGIT DISPLAY FUNCTIOINALITY
+
+
+
+//DISPLAYS 'int' INPUT ON THE THREE DIGIT DISPLAY
 
 void displayNumber(int number) {
   int digitValues[3] = {number / 100, (number / 10) % 10, number % 10};
@@ -263,7 +297,9 @@ void displayNumber(int number) {
   }
 }
 
-//Helper function for display numbers
+
+
+//HELPER FUNCTION USED FOR 'displayNumber' FUNCTION
 
 void showSegments(byte segments) {
   for (int i = 0; i < 8; i++) {
@@ -271,7 +307,12 @@ void showSegments(byte segments) {
   }
 }
 
-//Kill switch function
+
+
+
+//KILL SWITCH FUNCTIONALITY
+
+//FUNCTION USED WHEN KILL SWITCH IS PRESSED (STOPS ALL ELECTRICAL PARTS)
 
 void CheckKillSwitch(){
   if(digitalRead(KillSwitch)==LOW){
@@ -283,7 +324,7 @@ void CheckKillSwitch(){
     stopMotor(IN2_1,IN2_2);
     stopMotor(IN3_1,IN3_2);
     while(true){
-      delay(30303033030303030);
+      delay(1000);
     }
   }
 }
