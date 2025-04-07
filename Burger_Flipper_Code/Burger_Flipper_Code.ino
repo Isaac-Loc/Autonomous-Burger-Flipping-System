@@ -12,12 +12,12 @@ Servo SpatulaServo; //Spatula Servo object
 #define IN1_1 13 // Motor direction control pin 1 (Forward)
 #define IN1_2 2 // Motor direction control pin 2 (Backward)
 
-//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC - 24v, 1000 rpm DC Motor
+//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC
 #define ENA2 3  // PWM pin to control motor speed (0-255)
 #define IN2_1 4 // Motor direction control pin 1 (Forward)
 #define IN2_2 5 // Motor direction control pin 2 (Backward)
 
-//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis - 24v, 800 rpm DC Motor
+//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis
 #define ENA3 6  // PWM pin to control motor speed (0-255)
 #define IN3_1 7 // Motor direction control pin 1 (Forward)
 #define IN3_2 8 // Motor direction control pin 2 (Backward)
@@ -248,6 +248,7 @@ void stopMotor(int in1Pin, int in2Pin) {
 
 //Function for number shown on the 3 digit display
 
+
 void displayNumber(int number) {
   int digitValues[3] = {number / 100, (number / 10) % 10, number % 10};
 
@@ -286,15 +287,3 @@ void CheckKillSwitch(){
     }
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
