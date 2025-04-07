@@ -168,6 +168,11 @@ void loop() {
   //STARTS BURGER FLIPPING PROCESS IF RECEIVER VALUES SHOW INTERCEPTED (MEANING BURGER HAS BEEN PLACED)
 
   if(value1==1 || value2==1 || value3==1 || value4==1){
+
+    
+    //SETS PATTY UP FOR CHECKING TEMPERATURE FOR FIRST FLIP
+
+
     moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor to pick up the patty
     delay(7000); //7 second delay
     CheckKillSwitch(); //kill switch check
@@ -184,10 +189,20 @@ void loop() {
     moveForward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe the other axis until the end (the probe should be in the burger in theory)
     delay(8000); //7 second delay
     CheckKillSwitch(); //kill switch check
+
+
+    //CHECKS TEMPERTURE OF PATTY
+
+
     float Temperature = 0.0;
     while(!(Temperature>=165.0)){
       Temperature = GetTemperature();
     }
+
+
+    //FLIPS PATTY AND SETS IT UP AGAIN FOR CHECKING TEMPERATURE FOR THE COOKED BURGER
+
+
     CheckKillSwitch(); //kill switch check
     moveBackward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe backward to the middle position on the side
     delay(6000); //6 second delay
@@ -205,10 +220,18 @@ void loop() {
     moveForward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe the other axis until the end (the probe should be in the burger in theory)
     delay(8000); //7 second delay
     CheckKillSwitch(); //kill switch check
+
+
+    //CHECKS TEMPERATURE AGAIN TO SEE IF BURGER IS FINISHED COOKING
+
+
     float Temperature2 = 0.0;
     while(!(Temperature2>=165.0)){
       Temperature2 = GetTemperature();
     }
+
+
+    //PICKS UP BURGER AND FLIPS IT ON A PLATE FOR SERVING
     CheckKillSwitch(); //kill switch check
     moveBackward(ENA1, IN1_1, IN1_2, 255, 5000); //moves the probe backward to the middle position on the side
     delay(6000); //6 second delay
@@ -224,6 +247,7 @@ void loop() {
     moveBackward(ENA2, IN2_1, IN2_2, 255, 2000);
     delay(3000); //3 second delay
   }
+  delay(2000);
 }
 
 
