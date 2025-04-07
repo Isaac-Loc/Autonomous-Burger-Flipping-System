@@ -10,23 +10,26 @@
 Servo SpatulaServo; //Spatula Servo object
 
 
-//DC Motor 1 Pins (Pins 10, 13, 2) Probe DC y axis
+//DC MOTOR 1 PINS (Pins 10, 13, 2) Probe DC y axis
 
 #define ENA1 10  // PWM pin to control motor speed (0-255)
 #define IN1_1 13 // Motor direction control pin 1 (Forward)
 #define IN1_2 2 // Motor direction control pin 2 (Backward)
 
-//DC Motor 2 Pins (Pins 3, 4, 5) Spatula DC
+//DC MOTOR 2 PINS (Pins 3, 4, 5) Spatula DC
+
 #define ENA2 3  // PWM pin to control motor speed (0-255)
 #define IN2_1 4 // Motor direction control pin 1 (Forward)
 #define IN2_2 5 // Motor direction control pin 2 (Backward)
 
-//DC Motor 3 Pins (Pins 6, 7, 8) Probe DC x axis
+//DC MOTOR 3 PINS (Pins 6, 7, 8) Probe DC x axis
+
 #define ENA3 6  // PWM pin to control motor speed (0-255)
 #define IN3_1 7 // Motor direction control pin 1 (Forward)
 #define IN3_2 8 // Motor direction control pin 2 (Backward)
 
-//ALL LASERS AND RECEIVER PINS
+//ALL LASERS AND RECEIVER PIN NUMBERS
+
 #define laser1 14 //Pin for laser 1
 #define laser2 15 //Pin for laser 2
 #define laser3 16 //Pin for laser 3
@@ -37,18 +40,25 @@ Servo SpatulaServo; //Spatula Servo object
 #define receiver3 20 //Pin for receiver 3
 #define receiver4 21 //Pin for receiver 4
 
+
+//PIN NUMBER FOR TEMPERATURE PROBE
+
 #define ONE_WIRE_BUS 22 //Pin for temperature probe
 OneWire oneWire(ONE_WIRE_BUS);
 DallasTemperature sensors(&oneWire);
 
+//PIN NUMBER FOR KILL SWITCH
+
 const int KillSwitch = 23; //Pin for kill switch
 
-// Define segment pins for 3 digit display
+//PIN NUMBER FOR 3 DIGIT DISPLAY
+
 const int segmentPins[8] = {24, 25, 26, 27, 28, 29, 30, 31}; // A to DP
 const int digitPins[3] = {32, 33, 34}; // Common cathode pins
 
+//DIGIT REPRESENTATION FOR NUMBERS 0-9 FOR 3 DIGIT DISPLAY
 
-// Define digit representation for numbers 0-9
+
 const byte digits[10] = {
   0b00111111, // 0
   0b00000110, // 1
@@ -69,10 +79,12 @@ const byte digits[10] = {
 
 
 void setup() {
-  // put your setup code here, to run once:
+  //INITIALIZE SERVO PIN
+
   SpatulaServo.attach(9); //attach spatula servo to pin 6
 
-   // Initialize motor pins
+   // INITIALIZE DC MOTOR PINS
+
   pinMode(ENA1, OUTPUT);  // Motor 1 speed control
   pinMode(IN1_1, OUTPUT); // Motor 1 direction control (Forward)
   pinMode(IN1_2, OUTPUT); // Motor 1 direction control (Backward)
@@ -85,35 +97,49 @@ void setup() {
   pinMode(IN3_1, OUTPUT); // Motor 3 direction control (Forward)
   pinMode(IN3_2, OUTPUT); // Motor 3 direction control (Backward)
 
+  //INITIALIZES LASER AND RECEIVER PINS
+
   pinMode(laser1, OUTPUT); // set the laser pin to output mode
-  pinMode(receiver1, INPUT); // set the laser pin to output mode
+  pinMode(receiver1, INPUT); // set the receiver pin to input mode
   digitalWrite(laser1, HIGH); // emit red laser
 
   pinMode(laser2, OUTPUT); // set the laser pin to output mode
-  pinMode(receiver2, INPUT); // set the laser pin to output mode
+  pinMode(receiver2, INPUT); // set the receiver pin to input mode
   digitalWrite(laser2, HIGH);// emit red laser
 
   pinMode(laser3, OUTPUT); // set the laser pin to output mode
-  pinMode(receiver3, INPUT); // set the laser pin to output mode
+  pinMode(receiver3, INPUT); // set the receiver pin to input mode
   digitalWrite(laser3, HIGH);// emit red laser
 
   pinMode(laser4, OUTPUT); // set the laser pin to output mode
-  pinMode(receiver4, INPUT); // set the laser pin to output mode
+  pinMode(receiver4, INPUT); // set the receiver pin to input mode
   digitalWrite(laser4, HIGH); // emit red laser
 
-  // Set segment pins as OUTPUT
+
+  //INITIALIZES PINS FOR 3 DIGIT DISPLAY
+
+
+  // SET SEGMENT PINS AS OUTPUT
+
   for (int i = 0; i < 8; i++) {
     pinMode(segmentPins[i], OUTPUT);
   }
   
-  // Set digit control pins as OUTPUT
+  // Set DIGIT CONTROL PINS OUTPUT
+
   for (int i = 0; i < 3; i++) {
     pinMode(digitPins[i], OUTPUT);
     digitalWrite(digitPins[i], HIGH); // Start with all digits off
   }
 
+  //INITIALIZES KILL SWITCH PIN
+
+
   pinMode(KillSwitch,INPUT_PULLUP); // sets up kill switch pin
   
+
+  //STARTS THE SERIAL MONITOR AND TEMPERATURE SENSOR
+
   Serial.begin(9600);
   sensors.begin();
 }
@@ -124,13 +150,22 @@ void setup() {
 
 
 void loop() {
-  // put your main code here, to run repeatedly:
+  
+  //KILL SWITCH CHECK
+
   CheckKillSwitch();
+
+  //READS RECEIVER VALUES
+
   //1 is not connected 0 is connected to receiver
   int value1 = digitalRead(receiver1); // receiver/detector send either LOW or HIGH (no analog values!)
   int value2 = digitalRead(receiver2); // receiver/detector send either LOW or HIGH (no analog values!)
   int value3 = digitalRead(receiver3); // receiver/detector send either LOW or HIGH (no analog values!)
   int value4 = digitalRead(receiver4); // receiver/detector send either LOW or HIGH (no analog values!)
+
+
+
+  //STARTS BURGER FLIPPING PROCESS IF RECEIVER VALUES SHOW INTERCEPTED (MEANING BURGER HAS BEEN PLACED)
 
   if(value1==1 || value2==1 || value3==1 || value4==1){
     moveForward(ENA2, IN2_1, IN2_2, 255, 5000); //Move spatula DC Motor to pick up the patty
