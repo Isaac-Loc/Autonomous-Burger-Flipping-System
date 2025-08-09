@@ -1,4 +1,4 @@
-# Zeta-Gamma-Flippin-Burgers
+# Autonomous-Burger-Flipping-System
 This github repository will be used to store the arduino code that will be used to make our burger flipper functional. It will provide code for all motors used in this project. There will be functional code that will operate the servo motor and DC motors. We will be using the arduino IDE for this project. This project will mostly be developed in C++.
 
 # Instructions
