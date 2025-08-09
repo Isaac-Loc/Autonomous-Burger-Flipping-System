@@ -26,5 +26,15 @@ These laser sensors and receivers should successfully locate the patty on the gr
 ### Meat probe 
 The meat probe should be able to successfully move to the patty and check the patty's temperature correctly
 
+# Required Materials
+## - Servo Motor
+## - 2 DC Motors
+## - Laser Sensors and Receivers
+## - Temperature Probe
+## - Arduino Mega Board
+## - Power Supplies
+## - Motor Drivers
+## - Wires 
+## - Grill
 
 
